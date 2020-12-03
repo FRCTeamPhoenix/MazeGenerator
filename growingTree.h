@@ -11,9 +11,9 @@ public:
 
     //override to implement your generation algorithm
     virtual void generateMaze(int rows, int columns) override;
-private:
-    std::vector<std::vector<char>> points;
 protected:
     //empties out and creates a solid block of wall chars that is x2 + 1 the specified size
     void createEmpty(int rows, int columns);
+private:
+    int rows, columns;
 };
