@@ -14,6 +14,4 @@ public:
 protected:
     //empties out and creates a solid block of wall chars that is x2 + 1 the specified size
     void createEmpty(int rows, int columns);
-private:
-    int rows, columns;
 };
