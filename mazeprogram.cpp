@@ -56,7 +56,7 @@ void MazeProgram::run(){
 }
 
 void MazeProgram::addGenerator(string name, MazeGenerator* gen){
-    if(m_generators.find(name) != m_generators.end()){
+    if(m_generators.find(name) == m_generators.end()){
         m_generators.insert(make_pair(name, gen));
     }else{
         throw "Generator "+name+" already exists";
