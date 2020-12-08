@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "mazegenerator.h"
 
 class Recursive : public MazeGenerator{
