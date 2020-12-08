@@ -12,6 +12,14 @@ namespace lineThings {
                 x2 = x12;
                 y2 = y12;
             }
+            bool line::isLine(int x1, int y1, int x12, int y12) {
+                if ((x == x1) && (y == y1) && (x2 == x12) && (y2 == y12)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
     };
     class point {
         public:
@@ -53,38 +61,85 @@ void GrowingTree::generateMaze(int rows, int columns) {
     while (mazeIncomplete) {
         int lastX = curX;
         int lastY = curY;
-        while (true) {
-            std::vector<lineThings::point> pointsTemp;
-            randomNeighbor:
-            //random neighbor
-            int tempX = 0;
+
+        std::vector<lineThings::point> pointsTemp;
+        randomNeighbor:
+        //random neighbor
+        int tempX = 0;
+        int tempY = 0;
+        int randX = 0;
+        int randY = 0;
+        if (rand() % 2 < 1) {
             while (tempX == 0) {
-                tempX = lastX + (rand() % 4) - 1;
+                randX = rand() % 4;
+                tempX = lastX + randX - 1;
             }
-            int tempY = 0;
+        }
+        else {
             while (tempY == 0) {
-                tempY = lastY + (rand() % 4) - 1;
+                randY = rand() % 4;
+                tempY = lastY + randY - 1;
             }
+        }
 
-            //is neighbor visited
-            for (int i = 0; i < points.size(); i++) {
-                if ((points[i].x == tempX) && (points[i].y == tempY)) {
+        //is neighbor visited
+        for (int i = 0; i < points.size(); i++) {
+            if ((points[i].x == tempX) && (points[i].y == tempY)) {
 
-                    for (int j = 0; j < pointsTemp.size(); j++) {
-                        if ((pointsTemp[j].x != tempX) && (pointsTemp[j].y != tempY)) {
-                            pointsTemp.emplace_back(lineThings::point(tempX, tempY));
-                        }
+                for (int j = 0; j < pointsTemp.size(); j++) {
+                    if ((pointsTemp[j].x != tempX) && (pointsTemp[j].y != tempY)) {
+                        pointsTemp.emplace_back(lineThings::point(tempX, tempY));
                     }
-                    if (pointsTemp.size() >= 4) {
-                        //this means there are no un-visted neighbors
-                        goto start;
+                }
+                if (pointsTemp.size() >= 4) {
+                    //this means there are no un-visted neighbors
+                    goto start;
+                }
+                goto randomNeighbor;
+            }
+        }
+        
+        //Remove the line between the current and last
+        curX = tempX;
+        curY = tempY;
+
+        if (randX != 0) {
+            if (randX == -1) {
+                //(x + 1, y, x + 1, y + 1)
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines[i].isLine(curX + 1, curY, curX + 1, curY + 1)) {
+                        lines.erase(lines.begin() + i);
                     }
-                    goto randomNeighbor;
                 }
             }
-            
-            //
+            else {
+                //(x, y, x, y + 1)
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines[i].isLine(curX, curY, curX, curY + 1)) {
+                        lines.erase(lines.begin() + i);
+                    }
+                }
+            }
         }
+        else {
+            if (randY == -1) {
+                //(x, y + 1, x + 1, y + 1)
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines[i].isLine(curX, curY + 1, curX + 1, curY + 1)) {
+                        lines.erase(lines.begin() + i);
+                    }
+                }
+            }
+            else {
+                //(x, y, x, y)
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines[i].isLine(curX, curY, curX, curY)) {
+                        lines.erase(lines.begin() + i);
+                    }
+                }
+            }
+        }
+
         points.emplace_back(lineThings::point(curX, curY));
     }
 
