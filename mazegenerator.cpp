@@ -16,7 +16,7 @@ void MazeGenerator::createEmpty(int rows, int columns){
     for(int y = 0; y < rows * 2 + 1; y++){
         string row = "";
 
-        for(int x = 0; x < columns; x++){
+        for(int x = 0; x < columns*2+1; x++){
             row += WALL_CHAR;
         }
 
