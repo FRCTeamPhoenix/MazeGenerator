@@ -22,6 +22,8 @@ void Recursive::generateMaze(int rows, int columns){
     int starty = cy;
     int lasty = cy;
     cout << "cy: " << cy << endl;
+    vector<int[]> path;
+    path.push_back({cx, cy});
     createEmpty(rows, columns);
     cout << "got to start\n";
     m_maze[cy][cx] = EMPTY_CHAR;
@@ -37,22 +39,16 @@ void Recursive::generateMaze(int rows, int columns){
                 m_maze[cy - 1][cx] = EMPTY_CHAR;
                 m_maze[cy - 2][cx] = EMPTY_CHAR;
                 cout << "emptied wall\n";
-                if(cx < columns - 2 && cy < rows - 2 && cx > 1){ // makes sure it won't step out of bounds when checking all adjacent cells
-                    adjacentEmpty = !(m_maze[cy][cx + 2] == WALL_CHAR && m_maze[cy + 2][cx] == WALL_CHAR && m_maze[cy][cx - 2] == WALL_CHAR);
-                }
                 cy -= 2;
                 moved = true;
             }
         }
-        if(cx < (columns * 1) - 2){ // if not at right of board
+        if(cx < (columns * 2 + 1) - 2){ // if not at right of board
             cout << "c\n";
             if(dir == 1 && m_maze[cy][cx + 2] == WALL_CHAR){ // if looking right and the cell there is untouched
                 m_maze[cy][cx + 1] = EMPTY_CHAR;
                 m_maze[cy][cx + 2] = EMPTY_CHAR;
                 cout << "emptied wall\n";
-                if(cy > 1 && cy < rows - 2 && cx > 1){ // makes sure it won't step out of bounds when checking all adjacent cells
-                    adjacentEmpty = !(m_maze[cy - 2][cx] == WALL_CHAR && m_maze[cy + 2][cx] == WALL_CHAR && m_maze[cy][cx - 2] == WALL_CHAR);
-                }
                 cx += 2;
                 moved = true;
             }
@@ -63,9 +59,6 @@ void Recursive::generateMaze(int rows, int columns){
                 m_maze[cy + 1][cx] = EMPTY_CHAR;
                 m_maze[cy + 2][cx] = EMPTY_CHAR;
                 cout << "emptied wall\n";
-                if(cy > 1 && cx < columns - 2 && cx > 1){ // makes sure it won't step out of bounds when checking all adjacent cells
-                    adjacentEmpty = !(m_maze[cy - 2][cx] == WALL_CHAR && m_maze[cy][cx + 2] == WALL_CHAR && m_maze[cy][cx - 2] == WALL_CHAR);
-                }
                 cy += 2;
                 moved = true;
             }
@@ -76,20 +69,34 @@ void Recursive::generateMaze(int rows, int columns){
                 m_maze[cy][cx - 1] = EMPTY_CHAR;
                 m_maze[cy][cx - 2] = EMPTY_CHAR;
                 cout << "emptied wall\n";
-                if(cy > 1 && cx < columns - 2 && cy < rows - 2){ // makes sure it won't step out of bounds when checking all adjacent cells
-                    adjacentEmpty = !(m_maze[cy - 2][cx] == WALL_CHAR && m_maze[cy][cx + 2] == WALL_CHAR && m_maze[cy + 2][cx] == WALL_CHAR);
-                }
                 cx -= 2;
                 moved = true;
             }
         }
         if(!moved){
             cout << "f\n";
-            cx = lastx;
-            cy = lasty;
+            cx = path[path.size()-1][0];
+            cy = path[path.size()-1][1];
+            path.erase(path.size()-1);
         }
         if(cx == startx && cy == starty){
             break;
+        }
+        bool hasAdjacent = false;
+        if(cy > 1){
+            hasAdjacent = m_maze[cy - 2][cx] == WALL_CHAR;
+        }
+        if(!hasAdjacent && cx > 1){
+            hasAdjacent = m_maze[cy][cx - 2] == WALL_CHAR;
+        }
+        if(!hasAdjacent && cx < (columns * 2 + 1) - 2){
+            hasAdjacent = m_maze[cy + 2][cx] == WALL_CHAR;
+        }
+        if(!hasAdjacent && cy < (rows * 2 + 1) - 2){
+            hasAdjacent = m_maze[cy][cx + 2] == WALL_CHAR;
+        }
+        if(hasAdjacent){
+            path.push_back({cx, cy});
         }
     }
     cout << "got to end\n";
