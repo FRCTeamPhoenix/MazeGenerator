@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 #include "growingTree.h"
 
 namespace lineThings {
@@ -37,6 +39,7 @@ GrowingTree::GrowingTree() {
 }
 
 void GrowingTree::generateMaze(int rows, int columns) {
+    srand (time(NULL));
     //http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm
     MazeGenerator::createEmpty(rows, columns);
     
