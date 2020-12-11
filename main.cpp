@@ -11,8 +11,6 @@ int main(){
         growingTree.generateMaze(6, 6);
         growingTree.displayMaze();
         for (int i = 0; i < 99999999; i++) {
-            int x = 5;
-            x++;
         }
         std::cout << std::endl << std::endl;
     }
