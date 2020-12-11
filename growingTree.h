@@ -7,6 +7,7 @@
 class GrowingTree: public MazeGenerator{
 public:
     //outputs the maze
+    GrowingTree();
     void displayMaze();
 
     //override to implement your generation algorithm

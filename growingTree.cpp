@@ -1,18 +1,19 @@
 #include <vector>
 #include <string>
+#include <iostream>
 #include "growingTree.h"
 
 namespace lineThings {
     class line {
         public:
             int x, y, x2, y2;
-            line::line(int x1, int y1, int x12, int y12) {
+            line(int x1, int y1, int x12, int y12) {
                 x = x1;
                 y = y1;
                 x2 = x12;
                 y2 = y12;
             }
-            bool line::isLine(int x1, int y1, int x12, int y12) {
+            bool isLine(int x1, int y1, int x12, int y12) {
                 if ((x == x1) && (y == y1) && (x2 == x12) && (y2 == y12)) {
                     return true;
                 }
@@ -24,7 +25,7 @@ namespace lineThings {
     class point {
         public:
             int x, y;
-            point::point(int x1, int y1) {
+            point(int x1, int y1) {
                 x = x1;
                 y = y1;
             }
@@ -141,11 +142,57 @@ void GrowingTree::generateMaze(int rows, int columns) {
         }
 
         points.emplace_back(lineThings::point(curX, curY));
+        if (points.size() >= columns*rows) {
+            mazeIncomplete = false;
+        }
     }
 
-    /*for (int i = 0; i < columns; i++) {
-        for (int j = 0; j < rows; j++) {
+    /*for (int i = 0; i < columns * 2 + 1; i++) {
+        for (int j = 0; j < rows * 2 + 1; j++) {
 
         }
     }*/
+    std::vector<std::string> maze;
+    for (int i = 0; i < columns - 1; i++) {
+        std::string row = "";
+        for (int j = 0; j < rows - 1; j++) {
+            bool tempBool = true;
+            for (int k = 0; k < lines.size(); k++) {
+                if (lines[k].isLine(i, j, i, j + 1)) {
+                    row += WALL_CHAR;
+                    tempBool = false;
+                }
+            }
+            if (tempBool) {
+                row += EMPTY_CHAR;
+            }
+
+            tempBool = true;
+            for (int k = 0; k < lines.size(); k++) {
+                if (lines[k].isLine(i, j, i + 1, j)) {
+                    row += WALL_CHAR;
+                    tempBool = false;
+                }
+            }
+            if (tempBool) {
+                row += EMPTY_CHAR;
+            }
+            //lines.emplace_back(lineThings::line(i, j, i, j + 1));
+            //lines.emplace_back(lineThings::line(i, j, i + 1, j));
+        }
+        row += WALL_CHAR;
+        maze.emplace_back(row);
+    }
+    std::string row = "";
+    for (int i = 0; i < columns - 1; i++) {
+        row += WALL_CHAR;
+    }
+    maze.emplace_back(row);
+    m_maze = maze;
+}
+
+void GrowingTree::displayMaze() {
+    for (int i = 0; i < m_maze.size(); i++) {
+        std::cout << m_maze[i] << std::endl;
+    }
 }
